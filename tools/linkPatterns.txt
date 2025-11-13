@@ -1,1 +1,3 @@
-'.top', '.vip', '.app'
+.top
+.vip
+.app
