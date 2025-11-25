@@ -1,9 +1,9 @@
 {
-  "name": "sntp_rule",
+  "name": "rule",
   "version": "1.0.0",
   "description": "sntp_rule",
   "main": "index.js",
-  "repository": "https://github.com/webxiaoz/rule_list.git",
+  "repository": "https://github.com/DDAICHICAO/rule_list.git",
   "author": "sntp_admin",
   "license": "MIT"
 }
