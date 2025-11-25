@@ -1,7 +1,7 @@
 {
   "name": "rule",
   "version": "1.0.0",
-  "description": "sntp_rule",
+  "description": "rule",
   "main": "index.js",
   "repository": "https://github.com/DDAICHICAO/rule_list.git",
   "author": "sntp_admin",
