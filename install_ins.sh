@@ -11,7 +11,7 @@ echo "[2/7] 执行系统优化脚本..."
 bash <(curl -Ls https://raw.githubusercontent.com/DDAICHICAO/rule_list/main/tools/sys.sh)
 
 echo "[3/7] 安装 Nyanpass 节点 1..."
-S=nyanpass-1 bash <(curl -fLSs https://dl.nyafw.com/download/nyanpass-install.sh) rel_nodeclient "-t 60a31c9c-0958-45cf-8dd7-4c070ae1601e -u https://ny.as9929.uk
+S=nyanpass-1 bash <(curl -fLSs https://dl.nyafw.com/download/nyanpass-install.sh) rel_nodeclient "-t 60a31c9c-0958-45cf-8dd7-4c070ae1601e -u https://ny.as9929.uk"
 
 echo "[5/7] 写入 Cloudflare DDNS 配置..."
 mkdir -p /etc/cf-ddns
