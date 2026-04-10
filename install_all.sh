@@ -2,7 +2,7 @@
 
 # 更新系统并安装常用软件包
 apt update && \
-apt install -y sudo curl wget unzip git iperf3 vim
+apt install -y sudo curl wget unzip git vim
 
 # 执行系统优化脚本
 bash <(curl -Ls https://raw.githubusercontent.com/DDAICHICAO/rule_list/main/tools/sys.sh)
