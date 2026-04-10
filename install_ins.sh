@@ -180,7 +180,7 @@ chmod +x /usr/local/bin/cf-ddns.sh
 
 echo "[6/8] 配置 cron..."
 cat > /etc/cron.d/cf-ddns <<'EOF'
-*/5 * * * * root /usr/local/bin/cf-ddns.sh >> /var/log/cf-ddns.log 2>&1
+* * * * * root /usr/local/bin/cf-ddns.sh >> /var/log/cf-ddns.log 2>&1
 EOF
 
 echo "[7/8] 启用 cron..."
