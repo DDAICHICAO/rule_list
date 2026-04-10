@@ -10,6 +10,7 @@ usage() {
 
 选项:
   --nyanpass-uuid UUID         Nyanpass UUID
+  --nyanpass-url URL           Nyanpass 服务地址，默认 https://ny.as9929.uk
   --cf-api-token TOKEN         Cloudflare API Token
   --cf-zone-id ZONE_ID         Cloudflare Zone ID
   --cf-record-v4 DOMAIN        IPv4 绑定域名
@@ -20,6 +21,7 @@ usage() {
 
 也支持环境变量:
   NYANPASS_UUID
+  NYANPASS_URL
   CF_API_TOKEN
   CF_ZONE_ID
   CF_RECORD_NAME_V4
@@ -31,6 +33,7 @@ usage() {
   CF_API_TOKEN='xxxx' \
   bash install_ins.sh \
     --nyanpass-uuid 60a31c9c-0958-45cf-8dd7-4c070ae1601e \
+    --nyanpass-url https://ny.as9929.uk \
     --cf-zone-id 0be2c57373680f2880a9d674809b996b \
     --cf-record-v4 aws-ddns-v4-2601.nod3.org \
     --cf-record-v6 aws-ddns-v6-2601.nod3.org
@@ -38,6 +41,7 @@ EOF
 }
 
 NYANPASS_UUID_DEFAULT=""
+NYANPASS_URL_DEFAULT="https://ny.as9929.uk"
 CF_ZONE_ID_DEFAULT="0be2c57373680f2880a9d674809b996b"
 CF_RECORD_NAME_V4_DEFAULT="aws-ddns-v4-2601.nod3.org"
 CF_RECORD_NAME_V6_DEFAULT="aws-ddns-v6-2601.nod3.org"
@@ -45,6 +49,7 @@ CF_PROXIED_DEFAULT="false"
 CF_TTL_DEFAULT="120"
 
 NYANPASS_UUID="${NYANPASS_UUID:-$NYANPASS_UUID_DEFAULT}"
+NYANPASS_URL="${NYANPASS_URL:-$NYANPASS_URL_DEFAULT}"
 CF_API_TOKEN="${CF_API_TOKEN:-}"
 CF_ZONE_ID="${CF_ZONE_ID:-$CF_ZONE_ID_DEFAULT}"
 CF_RECORD_NAME_V4="${CF_RECORD_NAME_V4:-$CF_RECORD_NAME_V4_DEFAULT}"
@@ -56,6 +61,10 @@ while [ $# -gt 0 ]; do
   case "$1" in
     --nyanpass-uuid)
       NYANPASS_UUID="$2"
+      shift 2
+      ;;
+    --nyanpass-url)
+      NYANPASS_URL="$2"
       shift 2
       ;;
     --cf-api-token)
@@ -112,7 +121,7 @@ echo "[2/8] 执行系统优化脚本..."
 bash <(curl -Ls https://raw.githubusercontent.com/DDAICHICAO/rule_list/main/tools/sys.sh)
 
 echo "[3/8] 安装 Nyanpass 节点客户端..."
-S=nyanpass-1 bash <(curl -fLSs https://dl.nyafw.com/download/nyanpass-install.sh) rel_nodeclient "-t ${NYANPASS_UUID} -u https://ny.as9929.uk"
+S=nyanpass-1 bash <(curl -fLSs https://dl.nyafw.com/download/nyanpass-install.sh) rel_nodeclient "-t ${NYANPASS_UUID} -u ${NYANPASS_URL}"
 
 echo "[4/8] 写入 Cloudflare 配置..."
 mkdir -p /etc/cf-ddns
@@ -278,6 +287,7 @@ echo
 echo "=========================================="
 echo "安装完成"
 echo "=========================================="
+echo "Nyanpass URL: ${NYANPASS_URL}"
 echo "配置文件: /etc/cf-ddns/cf-ddns.conf"
 echo "DDNS脚本: /usr/local/bin/cf-ddns.sh"
 echo "日志文件: /var/log/cf-ddns.log"
