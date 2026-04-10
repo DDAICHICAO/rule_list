@@ -21,7 +21,7 @@ cat > /etc/cf-ddns/cf-ddns.conf <<'EOF'
 CF_API_TOKEN="cfat_EOBsaw2AberWvBHSJOJGXtTyOVDmSkp1uJHITdXj1f30b071"
 
 # Cloudflare Zone ID
-CF_ZONE_ID="这里改成你的Zone_ID"
+CF_ZONE_ID="0be2c57373680f2880a9d674809b996b"
 
 # IPv4 和 IPv6 分别绑定的域名
 CF_RECORD_NAME_V4="aws-ddns-v4-2601.nod3.org"
