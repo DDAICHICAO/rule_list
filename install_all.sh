@@ -8,4 +8,6 @@ apt install -y sudo curl wget unzip git iperf3 vim
 bash <(curl -Ls https://raw.githubusercontent.com/DDAICHICAO/rule_list/main/tools/sys.sh)
 
 # 安装 Nyanpass 节点客户端
-S=nyanpass bash <(curl -fLSs https://dl.nyafw.com/download/nyanpass-install.sh) rel_nodeclient "-o -t d8d427ee-e3f6-4863-8dc0-5d26ab11b216 -u https://ny.as9929.uk"
+S=nyanpass-1 bash <(curl -fLSs https://dl.nyafw.com/download/nyanpass-install.sh) rel_nodeclient "-o -t d8d427ee-e3f6-4863-8dc0-5d26ab11b216 -u https://ny.as9929.uk"
+
+S=nyanpass-2 bash <(curl -fLSs https://dl.nyafw.com/download/nyanpass-install.sh) rel_nodeclient "-o -t 115f0244-2377-48d5-86a8-57a77e8916c9 -u https://mypass.v2link.top"
