@@ -1,59 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
-export DEBIAN_FRONTEND=noninteractive
-
-CF_ZONE_ID_DEFAULT="0be2c57373680f2880a9d674809b996b"
-CF_RECORD_NAME_V4_DEFAULT="aws-ddns-v4-2601.nod3.org"
-CF_RECORD_NAME_V6_DEFAULT="aws-ddns-v6-2601.nod3.org"
-CF_PROXIED_DEFAULT="false"
-CF_TTL_DEFAULT="120"
-
-echo "[1/8] 安装基础软件..."
-apt update
-apt install -y sudo curl wget unzip git vim jq cron
-
-echo "[2/8] 执行系统优化脚本..."
-bash <(curl -Ls https://raw.githubusercontent.com/DDAICHICAO/rule_list/main/tools/sys.sh)
-
-echo "[3/8] 安装 Nyanpass 节点客户端..."
-S=nyanpass-1 bash <(curl -fLSs https://dl.nyafw.com/download/nyanpass-install.sh) rel_nodeclient "-o -t d8d427ee-e3f6-4863-8dc0-5d26ab11b216 -u https://ny.as9929.uk"
-
-echo "[4/8] 读取 Cloudflare 配置..."
-CF_ZONE_ID="${CF_ZONE_ID:-$CF_ZONE_ID_DEFAULT}"
-CF_RECORD_NAME_V4="${CF_RECORD_NAME_V4:-$CF_RECORD_NAME_V4_DEFAULT}"
-CF_RECORD_NAME_V6="${CF_RECORD_NAME_V6:-$CF_RECORD_NAME_V6_DEFAULT}"
-CF_PROXIED="${CF_PROXIED:-$CF_PROXIED_DEFAULT}"
-CF_TTL="${CF_TTL:-$CF_TTL_DEFAULT}"
-
-if [ -z "${CF_API_TOKEN:-}" ]; then
-  read -r -s -p "请输入 Cloudflare API Token: " CF_API_TOKEN
-  echo
-fi
-
-mkdir -p /etc/cf-ddns
-
-cat > /etc/cf-ddns/cf-ddns.conf <<EOF
-CF_API_TOKEN="${CF_API_TOKEN}"
-CF_ZONE_ID="${CF_ZONE_ID}"
-CF_RECORD_NAME_V4="${CF_RECORD_NAME_V4}"
-CF_RECORD_NAME_V6="${CF_RECORD_NAME_V6}"
-ENABLE_IPV4="true"
-ENABLE_IPV6="true"
-PROXIED="${CF_PROXIED}"
-TTL="${CF_TTL}"
-EOF
-
-chmod 600 /etc/cf-ddns/cf-ddns.conf
-
-echo "[5/8] 写入 DDNS 更新脚本..."
-cat > /usr/local/bin/cf-ddns.sh <<'EOF'
-#!/bin/bash
-set -euo pipefail
-
 CONFIG_FILE="/etc/cf-ddns/cf-ddns.conf"
 [ -f "$CONFIG_FILE" ] || { echo "配置文件不存在: $CONFIG_FILE"; exit 1; }
-# shellcheck disable=SC1090
 source "$CONFIG_FILE"
 
 CF_API="https://api.cloudflare.com/client/v4"
@@ -108,9 +57,8 @@ ensure_record() {
   [ -n "$name" ] || { log "$type 域名未配置，跳过"; return 0; }
   [ -n "$ip" ] || { log "$type 未获取到公网IP，跳过"; return 0; }
 
-  local list_url="${CF_API}/zones/${CF_ZONE_ID}/dns_records?type=${type}&name=${name}"
   local list_resp
-  list_resp="$(cf_request GET "$list_url")"
+  list_resp="$(cf_request GET "${CF_API}/zones/${CF_ZONE_ID}/dns_records?type=${type}&name=${name}")"
 
   [ "$(echo "$list_resp" | jq -r '.success')" = "true" ] || {
     log "查询 $type 记录失败: $list_resp"
@@ -176,29 +124,3 @@ main() {
 }
 
 main "$@"
-EOF
-
-chmod +x /usr/local/bin/cf-ddns.sh
-
-echo "[6/8] 配置 cron..."
-cat > /etc/cron.d/cf-ddns <<'EOF'
-*/5 * * * * root /usr/local/bin/cf-ddns.sh >> /var/log/cf-ddns.log 2>&1
-EOF
-
-echo "[7/8] 启用 cron..."
-systemctl enable cron
-systemctl restart cron || service cron restart
-
-echo "[8/8] 首次执行 DDNS..."
-/usr/local/bin/cf-ddns.sh
-
-echo
-echo "=========================================="
-echo "安装完成"
-echo "=========================================="
-echo "配置文件: /etc/cf-ddns/cf-ddns.conf"
-echo "DDNS脚本: /usr/local/bin/cf-ddns.sh"
-echo "日志文件: /var/log/cf-ddns.log"
-echo
-echo "手动执行： /usr/local/bin/cf-ddns.sh"
-echo "查看日志： tail -f /var/log/cf-ddns.log"
