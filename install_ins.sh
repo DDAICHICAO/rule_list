@@ -17,7 +17,7 @@ echo "[2/8] 执行系统优化脚本..."
 bash <(curl -Ls https://raw.githubusercontent.com/DDAICHICAO/rule_list/main/tools/sys.sh)
 
 echo "[3/8] 安装 Nyanpass 节点客户端..."
-S=nyanpass-1 bash <(curl -fLSs https://dl.nyafw.com/download/nyanpass-install.sh) rel_nodeclient "-o -t d8d427ee-e3f6-4863-8dc0-5d26ab11b216 -u https://ny.as9929.uk"
+S=nyanpass-1 bash <(curl -fLSs https://dl.nyafw.com/download/nyanpass-install.sh) rel_nodeclient "-t 60a31c9c-0958-45cf-8dd7-4c070ae1601e -u https://ny.as9929.uk"
 
 echo "[4/8] 读取 Cloudflare 配置..."
 CF_ZONE_ID="${CF_ZONE_ID:-$CF_ZONE_ID_DEFAULT}"
