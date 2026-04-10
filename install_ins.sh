@@ -100,19 +100,6 @@ cf_request() {
   printf '%s\n' "$body"
 }
 
-verify_token() {
-  local resp
-  resp="$(cf_request GET "${CF_API}/user/tokens/verify")" || {
-    log "Token 验证失败"
-    return 1
-  }
-
-  if [ "$(echo "$resp" | jq -r '.success')" != "true" ]; then
-    log "Token 无效: $resp"
-    return 1
-  fi
-}
-
 ensure_record() {
   local type="$1"
   local name="$2"
@@ -176,8 +163,6 @@ ensure_record() {
 main() {
   [ -n "${CF_API_TOKEN:-}" ] || { log "CF_API_TOKEN 未配置"; exit 1; }
   [ -n "${CF_ZONE_ID:-}" ] || { log "CF_ZONE_ID 未配置"; exit 1; }
-
-  verify_token
 
   if [ "${ENABLE_IPV4}" = "true" ]; then
     IPV4="$(get_ipv4)"
