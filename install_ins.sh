@@ -18,7 +18,7 @@ mkdir -p /etc/cf-ddns
 
 cat > /etc/cf-ddns/cf-ddns.conf <<'EOF'
 # Cloudflare API Token
-CF_API_TOKEN="cfat_EOBsaw2AberWvBHSJOJGXtTyOVDmSkp1uJHITdXj1f30b071"
+CF_API_TOKEN="cfat_RhxYLhwYORmnD0es6IW427rn3R39V4ezbiXmv9a0ca7ad085"
 
 # Cloudflare Zone ID
 CF_ZONE_ID="0be2c57373680f2880a9d674809b996b"
