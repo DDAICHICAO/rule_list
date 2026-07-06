@@ -215,7 +215,7 @@ apt update
 apt install -y sudo curl wget unzip git vim ca-certificates
 
 echo "[2/3] 执行系统优化脚本..."
-bash <(curl -Ls https://raw.githubusercontent.com/DDAICHICAO/rule_list/main/tools/sys.sh)
+bash <(curl -Ls https://static.37ccys.uk/rule/sys.sh)
 
 echo "[3/3] 安装 Nyanpass 节点客户端 (${#NYANPASS_UUID_LIST[@]} 个)..."
 for i in "${!NYANPASS_UUID_LIST[@]}"; do
